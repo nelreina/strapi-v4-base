@@ -7,4 +7,5 @@ EXPOSE 1337
 WORKDIR /app
 USER node
 COPY --chown=node:node . .
+RUN yarn build
 CMD ["node", "server.js"]
