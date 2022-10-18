@@ -18,14 +18,17 @@ module.exports = () => {
     strapi.log.info(JSON.stringify({ SNAME, event }));
     let ok = false;
     mapping.forEach(async (m) => {
-      if (m.event === event) {
-        // ok = true;
-        ok = await strapi.services[m.service][m.method](streamData);
+      try {
+        if (m.event === event) {
+          ok = await strapi.services[m.service][m.method](streamData);
+          if (ok) {
+            await ack(streamId);
+          }
+        }
+      } catch (error) {
+        strapi.log.error(error.message);
       }
     });
-    if (ok) {
-      await ack(streamId);
-    }
   };
 
   stream.init = async () => {
