@@ -11,15 +11,39 @@ import {
 } from "@strapi/design-system/Layout";
 import { EmptyStateLayout } from "@strapi/design-system/EmptyStateLayout";
 import { Button } from "@strapi/design-system/Button";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Modal from "../../components/EventStream/Modal";
-import { addMapping } from "../../api";
+import {
+  addMapping,
+  deleteMapping,
+  editMapping,
+  getAllMapping,
+} from "../../api";
+import MappingCount from "../../components/EventStream/Count";
+import MappingTable from "../../components/EventStream/Table";
 
 const HomePage = () => {
   const [mappings, setMappings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  const fetchMappings = async () => {
+    setLoading(true);
+    const data = await getAllMapping();
+    setMappings(data);
+    setLoading(false);
+  };
+
+  const createMapping = async (data) => {
+    await addMapping(data);
+    fetchMappings();
+  };
+
+  useEffect(async () => {
+    await fetchMappings();
+    return () => {};
+  }, []);
 
   return (
     <Layout>
@@ -30,6 +54,7 @@ const HomePage = () => {
       />
 
       <ContentLayout>
+        <MappingCount count={mappings.length} />
         {mappings.length === 0 ? (
           <EmptyStateLayout
             content="No mapping avaialable"
@@ -38,11 +63,16 @@ const HomePage = () => {
             }
           />
         ) : (
-          <p>Not empty state</p>
+          <MappingTable
+            mappingData={mappings}
+            editMapping={editMapping}
+            deleteMapping={deleteMapping}
+            setShowModal={setShowModal}
+          />
         )}
       </ContentLayout>
       {showModal && (
-        <Modal setShowModal={setShowModal} addMapping={addMapping} />
+        <Modal setShowModal={setShowModal} addMapping={createMapping} />
       )}
     </Layout>
   );

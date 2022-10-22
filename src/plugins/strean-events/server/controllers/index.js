@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const myController = require('./my-controller');
+const mapping = require("./mapping");
 
 module.exports = {
-  myController,
+  mapping,
 };

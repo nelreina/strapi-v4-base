@@ -4,7 +4,7 @@
   "description": "This is the description of the plugin.",
   "strapi": {
     "name": "strean-events",
-    "description": "Description of Strean Events plugin",
+    "description": "Map Redis Streams to Strapi services",
     "kind": "plugin",
     "displayName": "Strean Events"
   },
