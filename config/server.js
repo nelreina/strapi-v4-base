@@ -4,4 +4,12 @@ module.exports = ({ env }) => ({
   app: {
     keys: env.array("APP_KEYS"),
   },
+   localazy: {
+    enabled: true,
+    resolve: "./src/plugins/localazy",
+    config: {
+      default: () => {},
+      validator: () => {},
+    },
+  },
 });
